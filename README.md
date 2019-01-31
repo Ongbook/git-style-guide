@@ -5,3 +5,14 @@
 Git styleguide sugerido por nós da **Ongbook**
 
 <br>
+
+## Branches
+
+## Commits
+
+## Messages
+
+## Merging
+
+## Need Help ?
+
