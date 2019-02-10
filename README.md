@@ -1,4 +1,4 @@
-<img src="https://central.ongbook.org/img/ongbook.png" width="127px" height="127px" align="left"/>
+<img src="https://central.ongbook.org/img/ongbook.png" width="100px" align="left"/>
 
 # Git Style Guide
 
