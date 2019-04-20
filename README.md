@@ -4,7 +4,7 @@
 
 Git styleguide sugerido por nós da **Ongbook**
 
-<br># Commit messages guide
+# Commit messages guide
 
 [![Diga obrigado!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/RomuloOliveira)
 
