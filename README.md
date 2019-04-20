@@ -4,233 +4,420 @@
 
 Git styleguide sugerido por nós da **Ongbook**
 
-<br>
-
-<h3><a id="Branchs_0"></a>Branchs</h3>
-<ul>
-<li><strong>develop:</strong> versão que contém todas as novas features desenvolvidas (onde todo o ciclo de teste e validação foram feitos), não deve conter desenvolvimentos não aprovados e desenvolvimentos incompletos, ou seja, tudo que está preparado e aprovado para ir pra próxima release em produção. caso tenha algum hotfix, o conteúdo do hotfix também fica disponível em develop</li>
-<li><strong>master:</strong> última versão estável, contém todos os recursos entregues em produção, caso tenha algum hotfix, o conteúdo do hotfix também fica disponível em master</li>
-<li><strong>feature/xxxx:</strong> uma branch temporária que contém a implementação candidata na próxima release, onde seu ciclo de vida fica limitado à sua aprovação e validação, na sua finalização deve ir para o branch develop</li>
-<li><strong>bugfix/xxxx:</strong> uma branch temporária que contém uma correção que não é emergencial e pode ser levada para a próxima release. seu ciclo de vida é semelhante ao feature, somente muda o nome por respeito à nomenclatura da classificação da implementação</li>
-<li><strong>hotfix/xxxx:</strong> uma branch temporária que contém uma correção que é emergencial, devido à sua operação, deve ser definido por toda a equipe se a correção é uma hotfix. Seu ciclo de vida termina na validação da correção do erro e seu conteúdo deve ir para master e develop.</li>
-</ul>
-<h3><a id="Commits_7"></a>Commits</h3>
-<ul>
-<li><strong>feat:</strong> nova feature</li>
-<li><strong>fix:</strong> correção de código</li>
-<li><strong>docs:</strong> melhoria de comentário de código ou edição da parte de documentação da sua base de código;</li>
-<li><strong>style:</strong> melhorias de formatação de texto, mudança de estilo de codificação;</li>
-<li><strong>refactor:</strong> uma vez trabalhando com boa cobertura de teste ou não (o risco é por sua conta), esse commit é quando for apenas refatorar seu código;</li>
-<li><strong>perf:</strong> quase a mesma pegada do refactor mas esse ajuste resulta em maior performance da solução;</li>
-<li><strong>test:</strong> inclusão ou manuntenção de testes do software;</li>
-<li><strong>chore:</strong> se o que alterou não está associado a algum listado acima, utilize ele para classificar.</li>
-<li><strong>ci:</strong> para alterações no script de integração contínua</li>
-</ul>
-
-# Tabela de Conteúdo
+<br># Commit messages guide
 
-1. [Branches](#branches)
-2. [Commits](#commits)
-  1. [Mensagens](#messages)
-3. [Merging](#merging)
-4. [Misc.](#misc)
+[![Diga obrigado!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/RomuloOliveira)
 
-## Branches
+Um guia para entender a importância das mensagens de commit e como escrevê-las bem.
 
-* Escolha nomes *curtos* e *descritivos*:
-
-  ```shell
-  # bom
-  $ git checkout -b oauth-migration
+Pode te ajudar a aprender o que é um commit, saber porque é importante escrever boas mensages, boas práticas e dicas sobre como planejar e (re)escrever o seu histórico de commmits.
 
-  # ruim - muito vago
-  $ git checkout -b login_fix
-  ```
+**Observações:** Apesar da versão em português ter sido escrita antes da versão em inglês, a versão inglês contém alguns textos que estão mais detalhados, assim como melhor referenciamento de fontes.
 
-* Identificadores correspondentes de tickets de um serviço externo (Ex. Issues do GitHub
-) também são bons candidatos para usar em nomes de branches. Por exemplo:
+## O que é um _commit_?
 
-  ```shell
-  # GitHub Issue #15
-  $ git checkout -b issue-15
-  ```
+O **_commit_** é uma espécie de _snapshot_ dos seus arquivos locais gravado localmente no seu repositório.
+Ao contrário do que se pensa, o git _não_ armazena apenas as diferenças e sim a cópia completa dos arquivos.
+No caso de arquivos que não mudaram de um _commit_ para o outro, é gravada uma referência ao arquivo gerado no último
+snapshot.
 
-* Use *traços* para separar palavras.
+![](https://i.stack.imgur.com/AQ5TG.png)
 
-* Quando várias pessoas estão trabalhando na *mesma* funcionalidade, pode ser conveniente
-  ter um branch de funcionalidade *pessoal* e um branch de funcionalidade para a *equipe*.
-  Use a seguinte convenção de nomenclatura:
+## Por que as mensagens são importantes?
 
-  ```shell
-  $ git checkout -b feature-a/master # Branch da equipe
-  $ git checkout -b feature-a/maria  # Branch pessoal da Maria
-  $ git checkout -b feature-a/nick   # Branch pessoal do Nick
-  ```
+- Facilita e agiliza o _code review_
+- Ajuda no entendimento do que está acontecendo
+- Explica os porquês ocultos que não podem ser explicados somente no código
+- Facilita o troubleshooting, debug e entendimento do que foi feito
 
-  Realizar o merge nos branchs pessoais para o branch da equipe (ver ["Merging"](#merging)).
-  Eventualmente, o branch da equipe será integrado ao "master".
+## Boas práticas
 
-* Apague seu branch do upstream do repositório depois de integrado (a menos
-  que haja uma razão específica para não fazê-lo).
+### Use o imperativo
 
-  Dica: Use o seguinte comando quando estiver no "master" para listar os branches
-  que foram feitos merge:
+```
+# Good
+Use InventoryBackendPool to retrieve inventory backend
+```
 
-  ```shell
-  $ git branch --merged | grep -v "\*"
-  ```
+```
+# Bad
+Used InventoryBackendPool to retrieve inventory backend
+```
 
-## Commits
+Por que!?
 
-* Cada commit deve ser uma *mudança lógica* simples. Não faça várias
-  *mudanças lógicas* em um commit. Por exemplo, se uma alteração corrige um bug e
-  otimiza a performance de uma funcionalidade, o divida em dois commits separados.
+A mensagem de _commit_ diz o que ele **faz**, não o que foi feito.
 
-* Não divida uma *mudança lógica* simples em vários commits. Por exemplo,
-  a implementação de uma funcionalidade e os testes correspondentes à ela devem estar no mesmo commit.
+Regrinha de ouro para mensagens:
 
-* Commit *cedo* e *frequentemente*. Commits pequenos e autônomos são mais fáceis de entender e reverter
-  quando algo dá errado.
+```
+If applied, this commit will: <commit message>
+```
 
-* Commits devem ser ordenados *logicamente*. Por exemplo, se *commit X* depende
-  de uma mudança feita no *commit Y*, então *commit Y* deve vir antes do *commit X*.
+```
+# Good
+If applied, this commit will: Use InventoryBackendPool to retrieve inventory backend
+```
 
-### Mensagens
+```
+# Bad
+If applied, this commit will: Used InventoryBackendPool to retrieve inventory backend
+```
 
-* Use o editor, não o terminal, quando estiver escrevendo a mensagem do commit:
+### Primeira letra em maiúsculo
 
-  ```shell
-  # bom
-  $ git commit
+```
+# Good
+Add `use` method to Credit model
+```
 
-  # ruim
-  $ git commit -m "Correção rápida"
-  ```
+```
+# Bad
+add `use` method to Credit model
+```
 
-  Committar do terminal encoraja uma ideia de ter que encaixar tudo em uma
-  única linha, o que geralmente resulta em commits não informativos, mensagens ambíguas.
+É uma regra bem discutível e a menos importante pra mim.
+O motivo de escolher começar com letra maiúscula é simplesmente porque é assim
+que se começa uma frase em qualquer texto.
 
-* O sumário (ie. a primeira linha da mensagem) deve ser
-  *descritivo* ainda que *sucinto*. O ideal é que não seja maior que *50 caracteres*.
-  Deve ser escrito com letra maiúscula e no modo imperativo.
-  Não deve terminar com um ponto, uma vez que é efetivamente o título do *title*:
+### Tente comunicar o que o _commit_ faz sem que seja necessário olhar o conteúdo do _commit_
 
-  ```shell
-  # bom - modo imperativo, letra maiúscula, menos que 50 caracteres
-  Marcar grandes registros como obsoleto quando insinuar falhas
+```
+# Good
+Add `use` method to Credit model
 
-  # ruim
-  corrigido ActiveModel::Errors mensagens de depreciado falham quando o AR era usado fora do Rails.
-  ```
+```
 
-* Depois disso deve aparecer uma linha em branco seguido de mais descrição.
-  Deve possuir *72 caracteres* e explicar *por que*
-  a mudança é necessária, *como* está relacionado com a issue e o quais *efeitos colaterais*
-  podem ter.
+```
+# Bad
+Add `use` method
+```
 
-  Também deve fornecer qualquer referência aos recursos relacionados (eg. link para a issue correspondente em um bug tracker):
+```
+# Good
+Increase left padding between textbox and layout frame
+```
 
-  ```shell
-  Curto (50 chars ou menos) sumário de mudanças
+```
+# Bad
+Adjust css
+```
 
-  Texto explanatório mais detalhado, se necessário. Deve possuir
-  72 caracteres. Em alguns contextos, a primeira linha
-  é tratado como o assunto de um email e o resto
-  do texto como o corpo. A linha vazia separando o sumário
-  do corpo é crucial (a menos que você omita inteiramente
-  o corpo); ferramentas como rebase podem se confudir se você roda os dois juntos.
+### Use o corpo da mensagem para explicar "porquê", "para quê", "como" e detalhes adicionais
 
-  Parágrafos adicionais vem depois das linhas vazias.
+```
+# Good
+Fix method name of InventoryBackend child classes
 
-  - Marcador circulares são permitidos também
+Classes derived from InventoryBackend were not
+respecting the base class interface.
 
-  - Use um hífen ou asterisco para o marcador, seguido por um espaço simples, com linhas vazias entre eles
+It worked because cart was calling the backend implementation
+incorrectly.
+```
 
-  Fonte http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-  ```
+```
+# Good
+Serialize and deserialize credits to json in Cart
 
-  Por fim, quando estiver escrevendo uma mensagem do commit, pense sobre o que você precisaria saber olhando para o commit daqui um ano.
+Convert the Credit instances to dict for two main reasons:
 
-* Se um *commit A* depende do *commit B*, a dependência deve ser evidenciada na mensagem
-  do *commit A*. Use o hash do commit quando se referir a commits.
+  - Pickle relies on file path for classes and we do not want to break up
+    everything if a refactor is needed
+  - Dict and built-in types are picklable by default
+```
 
-  Similarmente, se o *commit A* corrige um bug introduzido pelo *commit B*, deve ser evidenciada na mensagem
-  do *commit A*.
+```
+# Good
+Add `use` method to Credit
 
-* Se um commit sofrerá squash de outro commit use o `--squash` e
-  `--fixup` sintaxes respectivamente, a fim tornar sua intenção clara:
+Change from namedtuple to class because we need to
+setup a new attribute (in_use_amount) with a new value
+```
 
-  ```shell
-  $ git commit --squash f387cab2
-  ```
+O título e o corpo da mensagem são separados por uma linha em branco.
+Linhas em branco adicionais são consideradas como parte do corpo.
 
-  *(Dica: Use a `--autosquash` marcação quando estiver realizando rebase. Os commits
-  terão o squash realizado automaticamente.)*
+Caracteres como `-` e `*` e \` são elementos comuns para melhorar a leitura.
 
-## Merging
+### Evite _commits_ com mensagens genéricas ou sem contexto algum
 
-* **Não reescreva histórico publicado.** O histórico do repositório é valioso a sua maneira e muito importante para permitir dizer *o que realmente aconteceu*. Alterar histórico publicado é uma fonte comum de problemas para qualquer um que trabalhe no projeto.
+```
+# Bad
+Fix this
 
-* Contudo, há casos em que reescrever o histórico é legítimo. Estes são quando:
+Fix stuff
 
-  * Você é o único trabalhando no branch e não está sendo inspecionado.
+Agora vai
 
-  * Você quer arrumar seu branch (eg. commits squash ) e/ou realizar rebase dele para o "master" para
-    realizar o merge depois.
+Change stuff
 
-  Dito isso, *nunca reescreva o histórico do branch "master"* ou quaisquer
-  branchs especiais (ie. usado em produção ou servidores de Integração Contínua).
+Adjust css
+```
 
-* Mantenha o histórico *limpo* e *simples*. *Bem antes de realizar o merge* em seu branch:
+### Tente limitar o nº de colunas das mensagens
 
-    1. Tenha certeza que está em conformidade com o guia de estilo e realize qualquer ação necessária
-       se não (squash/reordenar seus commits, refazer mensagens etc.)
+[Recomenda-se](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines) 50 caracteres para o título e por volta de 72 para o corpo.
 
-    2. Rebase em outro branch em que será feito:
+### Mantenha consistência de idioma
 
-       ```shell
-       [meu-branch] $ git fetch
-       [meu-branch] $ git rebase origin/master
-       # então merge
-       ```
+```
+# Good
+ababab Add `use` method to Credit model
+efefef Use InventoryBackendPool to retrieve inventory backend
+bebebe Fix method name of InventoryBackend child classes
+```
 
-       Isto resulta em um branch que pode ser diretamente aplicado no final do
-       branch "master" e resulta em um histórico bem simples.
+```
+# Good
+ababab Adiciona o método `use` ao model Credit
+efefef Usa o InventoryBackendPool para recuperar o backend de estoque
+bebebe Corrige nome de método na classe InventoryBackend
+```
 
-       *(Nota: Esta estratégia é mais adequada para projetos com branches
-        recentes. Caso contrário é melhor ocasionalmente realizar o merge do
-        branch "master" em vez de fazer rebase nele.)*
+```
+# Bad
+ababab Usa o InventoryBackendPool para recuperar o backend de estoque
+efefef Add `use` method to Credit model
+cdcdcd Agora vai
+```
 
-* Se seu branch inclui mais de um commit, não faça merge como um branch avançado:
+### Exemplo de formato
 
-  ```shell
-  # bom - garante que o commit de merge seja criado
-  $ git merge --no-ff meu-branch
+```
+Summarize changes in around 50 characters or less
 
-  # ruim
-  $ git merge meu-branch
-  ```
+More detailed explanatory text, if necessary. Wrap it to about 72
+characters or so. In some contexts, the first line is treated as the
+subject of the commit and the rest of the text as the body. The
+blank line separating the summary from the body is critical (unless
+you omit the body entirely); various tools like `log`, `shortlog`
+and `rebase` can get confused if you run the two together.
 
-## Misc.
+Explain the problem that this commit is solving. Focus on why you
+are making this change as opposed to how (the code explains that).
+Are there side effects or other unintuitive consequences of this
+change? Here's the place to explain them.
 
-* Há vários fluxos de trabalho, e cada um tem suas forças e fraquezas.
-  Se um fluxo de trabalho se encaixa para o seu caso, depende da equipe, do projeto e do seu
-  processo de desenvolvimento.
+Further paragraphs come after blank lines.
 
-  Dito isso, é importante escolher um fluxo de trabalho e permanecer com ele.
+ - Bullet points are okay, too
 
-* *Seja consistente.* Isto é relacionado ao fluxo de trabalho, mas também se expande a coisas como, mensagens dos commits, nomes de branchs, tags. Ter um estilo consistente dentro do repositório torna as coisas mais fáceis para entender o que está acontecendo olhando no log, em uma mensagem do commit etc.
+ - Typically a hyphen or asterisk is used for the bullet, preceded
+   by a single space, with blank lines in between, but conventions
+   vary here
 
-* *Teste antes de realizar o push.* Não suba trabalho não terminado.
+If you use an issue tracker, put references to them at the bottom,
+like this:
 
-* Use [Tags Anotadas](http://git-scm.com/book/en/v2/Git-Basics-Tagging#Annotated-Tags) para
-  marcação de releases ou outros pontos importantes no histórico
+Resolves: #123
+See also: #456, #789
+```
 
-  Prefira [lightweight tags](http://git-scm.com/book/en/v2/Git-Basics-Tagging#Lightweight-Tags) para uso pessoal, bem como para commit com marcações para referências futuras.
+## Rebase vs. Merge
 
-* Mantenha seu repositório em boa forma, realizando ocasionalmente tarefas de manutenção de performance em seu
-  repositório local *e* remoto:
+![](https://wac-cdn.atlassian.com/dam/jcr:01b0b04e-64f3-4659-af21-c4d86bc7cb0b/01.svg?cdnVersion=hq)
 
-  * [`git-gc(1)`](http://git-scm.com/docs/git-gc)
-  * [`git-prune(1)`](http://git-scm.com/docs/git-prune)
-  * [`git-fsck(1)`](http://git-scm.com/docs/git-fsck)
+### Rebase
+
+**TL;DR:** Aplica os _commits_ do seu _branch_, um a um, sobre o _branch_ de base, gerando uma nova árvore
+
+![](https://wac-cdn.atlassian.com/dam/jcr:5b153a22-38be-40d0-aec8-5f2fffc771e5/03.svg?cdnVersion=hq)
+
+### Merge
+
+**TL;DR:** Cria um novo _commit_, chamado de _Merge commit_, com as diferenças entre a sua árvore e a árvore de base
+
+![](https://wac-cdn.atlassian.com/dam/jcr:e229fef6-2c2f-4a4f-b270-e1e1baa94055/02.svg?cdnVersion=hq)
+
+### Por que algumas pessoas preferem rebase?
+
+Eu particularmente prefiro o rebase, alguns motivos incluem:
+
+* Deixa o histórico mais "limpo", sem _commits_ de _merge_ desnecessários espalhados nele
+* _What you see is what you get_, i.e., em um code review você está vendo o diff real entre o _master_ e o _branch_
+* Os conflitos mais complexos são resolvidos pelo _commiter_ e ficam dentro de um _commit_, que tem mensagem e propósito
+    * Ninguém olha o conteúdo dos _commits_ de _merge_ e nisso que mora o perigo
+
+### Quando fazer squash
+
+Squash é o processo de pegar uma série de commits e juntá-los em um commit só.
+
+É útil em diversas situações, como por exemplo:
+
+- Muitos _commits_ adicionais sem contexto (correção de _typos_, formatação, coisas esquecidas)
+- Mudanças que estão em _commits_ separados que fariam mais sentido parte de um só
+- _Commits WIP_
+
+### Quando evitar rebase ou squash?
+
+Evite _rebase_ e _squash_ em _commits_ públicos ou em _branches_ compartilhadas que outras pessoas possam ter trabalhado.
+_Rebase_ e _squash_ reescrevem a história sobrescrevendo commits existentes, fazendo isso em commits que existam em _branches_ compartilhadas (i.e., _commits_ enviados para repositórios remotos ou originados de outras branches) podem causar confusão e as pessoas podem perder suas modificações (tanto locais quanto remotas) por causa de divergências e conflitos.
+
+## Comandos úteis
+
+### rebase -i
+
+Usado para fazer _squash_, editar mensagens, editar/apagar/reordenar _commits_, etc.
+
+```
+pick 002a7cc Improve description and update document title
+pick 897f66d Add contributing section
+pick e9549cf Add a section of Available languages
+pick ec003aa Add "What is a commit" section"
+pick bbe5361 Add source referencing as a point of help wanted
+pick b71115e Add a section explaining the importance of commit messages
+pick 669bf2b Add "Good practices" section
+pick d8340d7 Add capitalization of first letter practice
+pick 925f42b Add a practice to encourage good descriptions
+pick be05171 Add a section showing good uses of message body
+pick d115bb8 Add generic messages and column limit sections
+pick 1693840 Add a section about language consistency
+pick 80c5f47 Add commit message template
+pick 8827962 Fix triple "m" typo
+pick 9b81c72 Add "Rebase vs Merge" section
+
+# Rebase 9e6dc75..9b81c72 onto 9e6dc75 (15 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+#### fixup
+
+Útil para facilitar a limpeza sem perder tempo/trabalho com um rebase.
+[Exemplos](http://fle.github.io/git-tip-keep-your-branch-clean-with-fixup-and-autosquash.html).
+
+### cherry-pick
+
+Bastante útil quando você precisa pegar aquele _commit_ que você fez no branch errado sem precisar reescrever novamente.
+
+Exemplo:
+
+```
+$ git cherry-pick 790ab21
+[master 094d820] Fix English grammar in Contributing
+ Date: Sun Feb 25 23:14:23 2018 -0300
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+### add/checkout/reset [--patch | -p]
+
+Exemplo de diff:
+
+```diff
+diff --git a/README.md b/README.md
+index 7b45277..6b1993c 100644
+--- a/README.md
++++ b/README.md
+@@ -186,10 +186,13 @@ bebebe Corrige nome de método na classe InventoryBackend
+ ``
+ # Bad (mixes English and Portuguese)
+ ababab Usa o InventoryBackendPool para recuperar o backend de estoque
+-efefef Add `use` method to Credit model
+ cdcdcd Agora vai
+ ``
+
++### Template
++
++This is a template, [written originally by Tim Pope](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html), which appears in the [_Pro Git Book_](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project).
++
+ ## Contributing
+
+ Any kind of help would be appreciated. Example of topics that you can help me with:
+@@ -202,3 +205,4 @@ Any kind of help would be appreciated. Example of topics that you can help me wi
+
+ - [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+ - [Pro Git Book - Commit guidelines](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
++- [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+```
+
+Podemos usar `git add -p` para adicionar apenas os patches que queremos, sem a necessidade de alterar o código que já está escrito.
+É útil para dividir uma grande mudança em commits menores ou para fazer reset/checkout de mudanças específicas.
+
+```
+Stage this hunk [y,n,q,a,d,/,j,J,g,s,e,?]? s
+Split into 2 hunks.
+```
+
+#### hunk 1
+
+```diff
+@@ -186,7 +186,6 @@
+ ``
+ # Bad (mixes English and Portuguese)
+ ababab Usa o InventoryBackendPool para recuperar o backend de estoque
+-efefef Add `use` method to Credit model
+ cdcdcd Agora vai
+ ``
+
+Stage this hunk [y,n,q,a,d,/,j,J,g,e,?]?
+```
+
+#### hunk 2
+
+```diff
+@@ -190,6 +189,10 @@
+ ``
+ cdcdcd Agora vai
+ ``
+
++### Template
++
++This is a template, [written originally by Tim Pope](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html), which appears in the [_Pro Git Book_](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project).
++
+ ## Contributing
+
+ Any kind of help would be appreciated. Example of topics that you can help me with:
+Stage this hunk [y,n,q,a,d,/,K,j,J,g,e,?]?
+
+```
+
+#### hunk 3
+
+```diff
+@@ -202,3 +205,4 @@ Any kind of help would be appreciated. Example of topics that you can help me wi
+
+ - [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+ - [Pro Git Book - Commit guidelines](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
++- [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+```
+
+## Links interessantes
+
+https://whatthecommit.com/
+
+## Gostou?
+
+[Mandar um obrigado!](https://saythanks.io/to/RomuloOliveira)
+
+## Contribuindo
+
+Todo tipo de ajuda é bem-vinda. Exemplos de tópicos em que você pode contribuir:
+
+- Correcões gramáticas e ortográficas
+- Tradução para novas línguas
+- Melhoras nas referências e fontes
+
+## Inspirações, fontes e leitura adicional
+
+- [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
+- [Pro Git Book - Commit guidelines](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#_commit_guidelines)
+- [A Note About Git Commit Messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+- [Merging vs. Rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
+- [Pro Git Book - Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
+
